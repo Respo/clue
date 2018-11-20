@@ -11,8 +11,20 @@
 
 (def page-options
   {:el ".app",
-   :data {:message "Hello Vue"},
-   :render (fn [h] (println "new rendere3") (h "div" (clj->js {}) (to-array ["Hello 11"])))})
+   :data (clj->js {:message "Hello Vue"}),
+   :render (fn [h]
+     (this-as
+      this
+      (.log js/console this)
+      (h
+       "div"
+       (clj->js {})
+       (to-array
+        [(.. this -$data -message)
+         (h
+          "button"
+          (clj->js {:on {:click (fn [] (set! (.. this -$data -message) "new"))}})
+          (array "change"))]))))})
 
 (defn main! []
   (println "App started.")
